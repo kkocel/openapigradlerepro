@@ -30,9 +30,20 @@ tasks.named("build") {
     finalizedBy("generateOpenApiDocs")
 }
 
+/**
+ * Unfortunately none of the tips from https://github.com/springdoc/springdoc-openapi-gradle-plugin/issues/102 seems to work.
+ * I was following the error message from Gradle and define explicit dependencies on required tasks (some of them will resolve dependency on other tasks in the graph).
+ * Lets see how issue 102 gets resolved.
+ */
 tasks {
     forkedSpringBootRun {
-        doNotTrackState("See https://github.com/springdoc/springdoc-openapi-gradle-plugin/issues/128")
+        dependsOn(
+            project.tasks.named("distTar"),
+            project.tasks.named("distZip"),
+            project.tasks.named("bootDistTar"),
+            project.tasks.named("bootDistZip"),
+            project.tasks.named("test")
+        )
     }
 }
 
